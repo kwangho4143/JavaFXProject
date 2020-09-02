@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="180.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane prefHeight="180.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="basic.control.ViewController" > 
    <children>
       <Label layoutX="11.0" layoutY="9.0" text="ListView" />
       <ListView fx:id="listView" layoutX="10.0" layoutY="30.0" prefHeight="100.0" prefWidth="100.0" />
-      <Label fx:id="tableView" layoutX="125.0" layoutY="9.0" prefHeight="0.0" text="TableView" />
+      <Label layoutX="125.0" layoutY="9.0" prefHeight="0.0" text="TableView" />
       <TableView fx:id="tableView" layoutX="120.0" layoutY="30.0" prefHeight="100.0" prefWidth="290.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
+          <TableColumn prefWidth="75.0" text="스마트폰" />
+          <TableColumn prefWidth="75.0" text="이미지" />
         </columns>
       </TableView>
       <Label layoutX="425.0" layoutY="9.0" text="ImageView" />
