@@ -67,5 +67,7 @@ public class Board {
 	public SimpleStringProperty titlecontent() {
 		return this.content;
 	}
+	
+	
 
 }
