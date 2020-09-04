@@ -1,4 +1,4 @@
-package basic.example;
+package basic.dbex;
 //UI: Root.fxml(기본),AddForm.fxml(추가),BarChart.fxml(차트)
 //Control:RootController.java
 import javafx.application.Application;

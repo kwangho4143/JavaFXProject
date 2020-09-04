@@ -1,9 +1,14 @@
-package basic.example;
+package basic.dbex;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import basic.common.ConnectionDB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,9 +44,7 @@ public class RootController implements Initializable {
 
 	
 	
-	
-	
-	
+
 	public void setPrimaryStage(Stage primaryStage) { // 컨트롤러에서 primary stage에서 사용하는 값들을 전달해주기 위해서
 		this.primaryStage = primaryStage;
 	}
@@ -274,13 +277,13 @@ public class RootController implements Initializable {
 
 				@Override
 				public void handle(ActionEvent arg0) {
+					TextField txtId = (TextField) parent.lookup("#txtId");
 					TextField txtName = (TextField) parent.lookup("#txtName");
 					TextField txtKorean = (TextField) parent.lookup("#txtKorean");
 					TextField txtMath = (TextField) parent.lookup("#txtMath");
 					TextField txtEnglish = (TextField) parent.lookup("#txtEnglish");
 
-					Student student = new Student(txtName.getText(), Integer.parseInt(txtKorean.getText()),
-							Integer.parseInt(txtMath.getText()), Integer.parseInt(txtEnglish.getText()));
+					Student student = new Student(Integer.parseInt(txtId.getText()),txtName.getText(), Integer.parseInt(txtKorean.getText()),Integer.parseInt(txtMath.getText()), Integer.parseInt(txtEnglish.getText()));
 
 					list.add(student);
 
@@ -292,11 +295,13 @@ public class RootController implements Initializable {
 
 			Button btnFormCancel = (Button) parent.lookup("#btnFormCancel");
 			btnFormCancel.setOnAction(e -> {
+				TextField txtId = (TextField) parent.lookup("#txtId");
 				TextField txtName = (TextField) parent.lookup("#txtName");
 				TextField txtKorean = (TextField) parent.lookup("#txtKorean");
 				TextField txtMath = (TextField) parent.lookup("#txtMath");
 				TextField txtEnglish = (TextField) parent.lookup("#txtEnglish");
 
+				txtId.clear();
 				txtName.clear();
 				txtKorean.clear();
 				txtMath.clear();
@@ -312,5 +317,37 @@ public class RootController implements Initializable {
 		}
 
 	}
+	
+	
+	
+	public ObservableList<Student> getSeries1(){
+		Connection conn = ConnectionDB.getDB();
+		String sql = "select * from studentDB";
+		ObservableList<TableColumn<Student, ?>> list = FXCollections.observableArrayList();
+		
+		try {
+			PreparedStatement pstmt=conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				list.add(new Student(rs.getInt("user_id"),rs.getString("user_name"),rs.getInt("korean"),rs.getInt("math"),rs.getInt("english")));
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+//		ObservableList<XYChart.Data<String, Integer>> list = FXCollections.observableArrayList();
+	
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

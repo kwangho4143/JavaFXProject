@@ -84,7 +84,7 @@ public class ChartController implements Initializable {
 	}
 	
 
-	public ObservableList<XYChart.Data<String, Integer>> getSeries3(){
+	public ObservableList<XYChart.Data<String, Integer>> getSeries1(){
 		Connection conn = ConnectionDB.getDB();
 		String sql = "select * from receipt";
 		ObservableList<XYChart.Data<String, Integer>> list = FXCollections.observableArrayList();
