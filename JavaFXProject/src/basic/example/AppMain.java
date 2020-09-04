@@ -17,11 +17,7 @@ public class AppMain extends Application{
 	@FXML
 	Button btnAdd, btnBarChart;
 	
-	
-	
-	
-	
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Root.fxml"));
@@ -34,7 +30,7 @@ public class AppMain extends Application{
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(false);//없어도 된다
 		
 	}
 	public static void main(String[] args) {
