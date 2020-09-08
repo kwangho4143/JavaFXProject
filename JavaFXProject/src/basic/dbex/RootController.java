@@ -28,17 +28,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class RootController implements Initializable {
 	@FXML
-	TableView<Student> tableView;
+	TableView<Student2> tableView;
 	@FXML
 	Button btnAdd, btnBarChart;
 
-	ObservableList<Student> list;
+	ObservableList<Student2> list;
 
 	Stage primaryStage;
 
@@ -51,7 +53,7 @@ public class RootController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		TableColumn<Student, ?> tc = tableView.getColumns().get(0); // 첫번째칼럼
+		TableColumn<Student2, ?> tc = tableView.getColumns().get(0); // 첫번째칼럼
 		tc.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 		tc = tableView.getColumns().get(1);
@@ -65,6 +67,7 @@ public class RootController implements Initializable {
 
 		// 성적저장
 		list = FXCollections.observableArrayList();
+		list = getStudentList();
 
 		tableView.setItems(list);
 
@@ -109,8 +112,14 @@ public class RootController implements Initializable {
 		AnchorPane ap = new AnchorPane();
 		ap.setPrefSize(210, 230);
 
-		Label lKorean, lMath, lEnglish;
-		TextField tName, tKorean, tMath, tEnglish;
+		Label lId,lKorean, lMath, lEnglish;
+		TextField tId,tName, tKorean, tMath, tEnglish;
+		
+		
+		
+		lId = new Label("id");
+		lId.setLayoutX(35);
+		lId.setLayoutY(158);
 
 		lKorean = new Label("국어");
 		lKorean.setLayoutX(35);
@@ -147,6 +156,56 @@ public class RootController implements Initializable {
 		tEnglish.setLayoutX(72);
 		tEnglish.setLayoutY(128);
 
+		tId = new TextField();
+		tId.setPrefWidth(110);
+		tId.setLayoutX(72);
+		tId.setLayoutY(158);
+	
+		Button btnDb = new Button("select");
+		btnDb.setLayoutX(85);
+		btnDb.setLayoutY(214);
+		
+		//
+//		Connection conn = DBConnection.getConnection();
+//
+//		String sql = "insert into studentDb(user_id,user_name,korean,math,english)" + "values("
+//				+ rs.getInt() + ",\'" + rs.getLastName() + "\',\'" + rs.getEmail() + "\',\'"
+//				+ rs.getHireDate() + "\',\'" + rs.getJobId() + "\')";
+//
+//		System.out.println(sql);
+//
+//		try {
+//			PreparedStatement psmt = conn.prepareStatement(sql);
+//			int r = psmt.executeUpdate();
+//			System.out.println(r + "건 입력되었습니다.");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+		
+
+		
+		
+		
+//		btnDb.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				Connection conn = ConnectionDB.getDB();
+//				String sql = "select * from studentDB";
+//				list = FXCollections.observableArrayList();		
+//				try {
+//					PreparedStatement pstmt=conn.prepareStatement(sql);
+//					ResultSet rs = pstmt.executeQuery();
+//					while(rs.next()) {
+//						list.add(new Student(rs.getInt("user_id"),rs.getString("user_name"),rs.getInt("korean"),rs.getInt("math"),rs.getInt("english")));
+//					}
+//				} catch (SQLException e) {
+//					
+//					e.printStackTrace();
+//				}						
+//			}		
+//		});
+		
+		
 		Button btnUpdate = new Button("수정");
 		btnUpdate.setLayoutX(85);
 		btnUpdate.setLayoutY(184);
@@ -157,7 +216,7 @@ public class RootController implements Initializable {
 			public void handle(ActionEvent event) {
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).getName().contentEquals(name)) {
-						Student student = new Student(name, Integer.parseInt(tKorean.getText()),
+						Student2 student = new Student2(Integer.parseInt(tId.getText()),name, Integer.parseInt(tKorean.getText()),
 								Integer.parseInt(tMath.getText()), Integer.parseInt(tEnglish.getText()));
 						list.set(i, student);
 					}
@@ -168,7 +227,7 @@ public class RootController implements Initializable {
 		});
 
 		// 이름기준으로 국어,수학,영어 점수...화면에 입력.
-		for (Student stu : list) {
+		for (Student2 stu : list) {
 			if (stu.getName().contentEquals(name)) {
 				tMath.setText(String.valueOf(stu.getMath()));
 				tKorean.setText(String.valueOf(stu.getKorean()));
@@ -176,13 +235,39 @@ public class RootController implements Initializable {
 			}
 		}
 
-		ap.getChildren().addAll(btnUpdate, tName, tKorean, tMath, tEnglish, lKorean, lMath, lEnglish);
+		ap.getChildren().addAll(lId,tId,btnDb,btnUpdate, tName, tKorean, tMath, tEnglish, lKorean, lMath, lEnglish);
+		
 
 		Scene scene = new Scene(ap);
 		stage.setScene(scene);
 		stage.show();
 		
 	}
+	public ObservableList<Student2> getStudentList(){
+		Connection conn = ConnectionDB.getDB();
+		String sql = "select * from stduentDb";
+		list = FXCollections.observableArrayList();
+		
+		try {
+			PreparedStatement pstmt=conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Student2 st= new Student2(rs.getInt("user_id"),rs.getString("user_name"),rs.getInt("korean"),rs.getInt("math"),rs.getInt("english"));
+				list.add(st);
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+//		ObservableList<XYChart.Data<String, Integer>> list = FXCollections.observableArrayList();
+
+		
+		return list;
+	}
+	
+	
+	
+	
 
 	public void handleBtnChartAction() {
 		Stage stage = new Stage(StageStyle.UTILITY);
@@ -283,7 +368,7 @@ public class RootController implements Initializable {
 					TextField txtMath = (TextField) parent.lookup("#txtMath");
 					TextField txtEnglish = (TextField) parent.lookup("#txtEnglish");
 
-					Student student = new Student(Integer.parseInt(txtId.getText()),txtName.getText(), Integer.parseInt(txtKorean.getText()),Integer.parseInt(txtMath.getText()), Integer.parseInt(txtEnglish.getText()));
+					Student2 student = new Student2(Integer.parseInt(txtId.getText()),txtName.getText(), Integer.parseInt(txtKorean.getText()),Integer.parseInt(txtMath.getText()), Integer.parseInt(txtEnglish.getText()));
 
 					list.add(student);
 
@@ -318,30 +403,7 @@ public class RootController implements Initializable {
 
 	}
 	
-	
-	
-	public ObservableList<Student> getSeries1(){
-		Connection conn = ConnectionDB.getDB();
-		String sql = "select * from studentDB";
-		ObservableList<TableColumn<Student, ?>> list = FXCollections.observableArrayList();
-		
-		try {
-			PreparedStatement pstmt=conn.prepareStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()) {
-				list.add(new Student(rs.getInt("user_id"),rs.getString("user_name"),rs.getInt("korean"),rs.getInt("math"),rs.getInt("english")));
-			}
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-//		ObservableList<XYChart.Data<String, Integer>> list = FXCollections.observableArrayList();
-	
-		
-		return list;
-	}
-	
-	
+
 	
 	
 	

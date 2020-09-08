@@ -3,14 +3,19 @@ package basic.dbex;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class Student {
+public class Student2 {
 	private SimpleIntegerProperty id;
 	private SimpleStringProperty name;
 	private SimpleIntegerProperty korean;
 	private SimpleIntegerProperty math;
 	private SimpleIntegerProperty english;
 	
-	public Student(int id,String name, int korean, int math, int english) {
+	public Student2() {
+		
+	}
+	
+	
+	public Student2(int id, String name, int korean, int math, int english) {
 		this.id = new SimpleIntegerProperty(id); 
 		this.name = new SimpleStringProperty(name);
 		this.korean = new SimpleIntegerProperty(korean);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yedam.book.BookController">
+	<center>
+		<TableView fx:id="tableView" prefHeight="200" prefWidth="420">
+			<columns>
+				<TableColumn prefWidth="100" resizable="false" text="BookName" />
+				<TableColumn prefWidth="100" resizable="false" text="BookUser" />
+				<TableColumn prefWidth="100" resizable="false" text="Company" />
+				<TableColumn prefWidth="100" resizable="false" text="Price" />
+			</columns>
+		</TableView>
+	</center>
+	<bottom>
+		<HBox alignment="CENTER" spacing = "20" prefHeight="50">
+			<children>
+				<Button fx:id="btnAdd" prefHeight="23.0" prefWidth="54.0" text="Add" />
+           		<Button fx:id="btnBring" prefHeight="23.0" prefWidth="56.0" text="bring" />
+           		<Button fx:id="btnMember" text="Member" />
+			</children>
+		</HBox>
+	</bottom>
+</BorderPane>
