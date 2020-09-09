@@ -25,6 +25,7 @@ public class BookMain extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setResizable(false);
+	
 		
 	}
 	public static void main(String[] args) {

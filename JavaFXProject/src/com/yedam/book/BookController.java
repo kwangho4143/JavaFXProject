@@ -29,10 +29,10 @@ import javafx.stage.StageStyle;
 public class BookController implements Initializable {
 	@FXML
 	TableView<Book> tableView;
+//	@FXML
+//	TableView<Member> tableView2;
 	@FXML
-	TableView<Member> tableView2;
-	@FXML
-	Button btnAdd, btnBring , btnMember;
+	Button btnAdd, btnBring , btnMember,btnUserAdd,btnUserCancel,btnInsert,btnDelete;
 
 	ObservableList<Book> list;
 	ObservableList<Member> list2;
@@ -64,6 +64,8 @@ public class BookController implements Initializable {
 		list = FXCollections.observableArrayList();
 		list2 = FXCollections.observableArrayList();
 		tableView.setItems(list);
+		//tableView2.setItems(list2);
+		
 		
 
 	
@@ -76,6 +78,15 @@ public class BookController implements Initializable {
 				
 			}
 
+		});
+		btnBring.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				handleBtnBringAction();
+				
+			}
+			
 		});
 		
 		tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -110,45 +121,10 @@ public class BookController implements Initializable {
 
 		try {
 			Parent parent = FXMLLoader.load(getClass().getResource("BookMember.fxml"));
-
 			Scene scene = new Scene(parent);
 			stage.setScene(scene);
 			stage.show();
 
-			// 추가화면의 컨트롤 사용하기
-			Button btnFormAdd = (Button) parent.lookup("#btnInsert");
-			btnFormAdd.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent arg0) {
-					
-					TextField UserName = (TextField) parent.lookup("#UserName");
-					TextField UserAge = (TextField) parent.lookup("#UserAge");
-					TextField UserPhone = (TextField) parent.lookup("#UserPhone");
-					TextField UserEmail = (TextField) parent.lookup("#UserEmail");
-
-					Member member = new Member(UserName.getText(), Integer.parseInt(UserAge.getText()),UserPhone.getText(),UserEmail.getText());
-
-					list2.add(member);
-
-					stage.close();
-				}
-			});
-
-			Button btnUserCancel = (Button) parent.lookup("#btnDelete");
-			btnUserCancel.setOnAction(e -> {
-				TextField UserName = (TextField) parent.lookup("#UserName");
-				TextField UserAge = (TextField) parent.lookup("#UserAge");
-				TextField UserPhone = (TextField) parent.lookup("#UserPhone");
-				TextField UserEmail = (TextField) parent.lookup("#UserEmail");
-
-				UserName.clear();
-				UserAge.clear();
-				UserPhone.clear();
-				UserEmail.clear();
-				
-
-			});
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -301,6 +277,48 @@ public class BookController implements Initializable {
 		}
 
 	}
+	
+	public void handleBtnBringAction() {
+
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initOwner(btnBring.getScene().getWindow());// 나중에 추가
+		try {
+			Parent parent = FXMLLoader.load(getClass().getResource("BookBring.fxml"));
+			Scene scene = new Scene(parent);
+			stage.setScene(scene);
+			stage.show();
+
+			// 추가화면의 컨트롤 사용하기
+			Button btnFormDelete = (Button) parent.lookup("#btnFormDelete");
+			btnFormDelete.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					TextField txtDeleteName = (TextField) parent.lookup("#txtDeleteName");
+					
+					for(int i=0;i<list.size();i++) {
+						if(list.get(i).getBookname().equals(txtDeleteName.getText())) {
+							list.remove(i);
+						}
+						
+						
+						
+					}
+					stage.close();
+
+				}
+
+			});
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
 	
 	
 	

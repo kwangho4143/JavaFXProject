@@ -18,8 +18,6 @@ public class AppMain extends Application{
 	Button btnAdd, btnBarChart;
 	
 	
-	
-	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Root.fxml"));

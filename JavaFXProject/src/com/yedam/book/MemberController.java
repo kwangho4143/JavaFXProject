@@ -56,7 +56,68 @@ public class MemberController implements Initializable{
 		tableView.setItems(list);
 
 		// 추가버튼
+		btnDelete.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				handleBtnUserDeleteAction();
+			}
+		});
+		
 
+		btnInsert.setOnAction(event->{
+			Stage stage = new Stage(StageStyle.UTILITY);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.initOwner(primaryStage);
+			
+			try {
+				Parent parent=FXMLLoader.load(getClass().getResource("MemberAdd.fxml"));
+				
+				Scene s = new Scene(parent);
+				stage.setScene(s);
+				stage.show();
+				
+				// 추가화면의 컨트롤 사용하기
+				Button btnUserAdd = (Button) parent.lookup("#btnUserAdd");
+				btnUserAdd.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						TextField UserName = (TextField) parent.lookup("#UserName");
+						TextField UserAge = (TextField) parent.lookup("#UserAge");
+						TextField UserPhone = (TextField) parent.lookup("#UserPhone");
+						TextField UserEmail = (TextField) parent.lookup("#UserEmail");
+
+						Member member = new Member(UserName.getText(),Integer.parseInt(UserAge.getText()),UserPhone.getText(),UserEmail.getText());
+
+						list.add(member);
+
+						stage.close();
+
+					}
+
+				});
+
+				Button btnUserCancel = (Button) parent.lookup("#btnUserCancel");
+				btnUserCancel.setOnAction(e -> {
+					TextField UserName = (TextField) parent.lookup("#UserName");
+					TextField UserAge = (TextField) parent.lookup("#UserAge");
+					TextField UserPhone = (TextField) parent.lookup("#UserPhone");
+					TextField UserEmail = (TextField) parent.lookup("#UserEmail");
+
+					UserName.clear();
+					UserAge.clear();
+					UserPhone.clear();
+					UserEmail.clear();
+					
+
+				});
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		});
 	
 		tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -152,5 +213,37 @@ public class MemberController implements Initializable{
 		stage.show();
 		
 	}
+	
+	public void handleBtnUserDeleteAction() {
+		
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initOwner(primaryStage);
+		try {
+			Parent parent = FXMLLoader.load(getClass().getResource("MemberDelete.fxml"));
+			Scene scene = new Scene(parent);
+			stage.setScene(scene);
+			stage.show();
 
+			// 추가화면의 컨트롤 사용하기
+			Button btnUserDelete = (Button) parent.lookup("#btnUserDelete");
+			btnUserDelete.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent arg0) {
+					TextField txtDeleteUser = (TextField) parent.lookup("#txtDeleteUser");
+					
+					for(int i=0;i<list.size();i++) {
+						if(list.get(i).getName().equals(txtDeleteUser.getText())) {
+							list.remove(i);
+						}
+					}
+					stage.close();
+				}
+			});
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+	}
 }
