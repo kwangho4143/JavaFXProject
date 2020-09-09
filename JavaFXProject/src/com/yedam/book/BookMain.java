@@ -1,6 +1,6 @@
-package basic.example;
-//UI: Root.fxml(기본),AddForm.fxml(추가),BarChart.fxml(차트)
-//Control:RootController.java
+package com.yedam.book;
+
+
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,34 +10,26 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class AppMain extends Application{
+public class BookMain extends Application {
 
-	@FXML
-	TableView<Student> tableView;
-	@FXML
-	Button btnAdd, btnBarChart;
-	
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> branch 'master' of https://github.com/kwangho4143/JavaFXProject.git
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("Root.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("BookList.fxml"));
 		BorderPane root = loader.load(); //기존과 다른점
 		
-		RootController controller = loader.getController();
+		BookController controller = loader.getController();
 		controller.setPrimaryStage(primaryStage);
 		
 		
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		primaryStage.setResizable(false);//없어도 된다
+		primaryStage.setResizable(false);
+	
 		
 	}
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }

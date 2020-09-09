@@ -2,6 +2,7 @@ package basic.example;
 
 import java.io.IOException;
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -180,6 +181,8 @@ public class RootController implements Initializable {
 		stage.show();
 		
 	}
+
+
 
 	public void handleBtnChartAction() {
 		Stage stage = new Stage(StageStyle.UTILITY);

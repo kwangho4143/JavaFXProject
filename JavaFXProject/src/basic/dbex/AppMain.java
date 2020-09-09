@@ -13,11 +13,9 @@ import javafx.stage.Stage;
 public class AppMain extends Application{
 
 	@FXML
-	TableView<Student> tableView;
+	TableView<Student2> tableView;
 	@FXML
 	Button btnAdd, btnBarChart;
-	
-	
 	
 	
 	@Override
