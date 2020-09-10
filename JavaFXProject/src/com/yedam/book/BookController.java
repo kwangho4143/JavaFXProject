@@ -60,10 +60,6 @@ public class BookController implements Initializable {
 		tc = tableView.getColumns().get(3);
 		tc.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-		// 성적저장
-		list = FXCollections.observableArrayList();
-		list2 = FXCollections.observableArrayList();
-		tableView.setItems(list);
 		//tableView2.setItems(list2);
 		
 		
@@ -111,6 +107,10 @@ public class BookController implements Initializable {
 			}
 		});
 		
+		// 성적저장
+		list = FXCollections.observableArrayList();
+		list2 = FXCollections.observableArrayList();
+		tableView.setItems(list);
 
 	}// end of initialize()
 	
