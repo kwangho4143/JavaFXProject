@@ -17,7 +17,11 @@ public class AppMain extends Application{
 	@FXML
 	Button btnAdd, btnBarChart;
 	
+<<<<<<< HEAD
+
+=======
 	
+>>>>>>> branch 'master' of https://github.com/kwangho4143/JavaFXProject.git
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Root.fxml"));
@@ -30,7 +34,7 @@ public class AppMain extends Application{
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		primaryStage.setResizable(false);
+		primaryStage.setResizable(false);//없어도 된다
 		
 	}
 	public static void main(String[] args) {

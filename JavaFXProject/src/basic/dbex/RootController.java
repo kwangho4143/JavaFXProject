@@ -252,7 +252,7 @@ public class RootController implements Initializable {
 			PreparedStatement pstmt=conn.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()) {
-				Student2 st= new Student2(rs.getInt("user_id"),rs.getString("user_name"),rs.getInt("korean"),rs.getInt("math"),rs.getInt("english"));
+				Student2 st= new Student2(rs.getInt("book_name"),rs.getString("book_author"),rs.getInt("book_publisher"),rs.getInt("book_price"));
 				list.add(st);
 			}
 		} catch (SQLException e) {

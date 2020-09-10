@@ -2,8 +2,13 @@ package com.yedam.book;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import basic.common.ConnectionDB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,17 +30,16 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
-public class MemberController implements Initializable{
+public class MemberController implements Initializable {
 	@FXML
 	TableView<Member> tableView;
 	@FXML
-	Button btnMember,btnUserAdd,btnUserCancel,btnInsert,btnDelete;
+	Button btnMember, btnUserAdd, btnUserCancel, btnInsert, btnDelete, btnSelect;
 
 	ObservableList<Member> list;
 
 	Stage primaryStage;
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		TableColumn<Member, ?> tc = tableView.getColumns().get(0); // 첫번째칼럼
@@ -62,20 +66,27 @@ public class MemberController implements Initializable{
 				handleBtnUserDeleteAction();
 			}
 		});
-		
 
-		btnInsert.setOnAction(event->{
+		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				list = getUserList();
+				tableView.setItems(list);
+			}
+		});
+
+		btnInsert.setOnAction(event -> {
 			Stage stage = new Stage(StageStyle.UTILITY);
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.initOwner(primaryStage);
-			
+
 			try {
-				Parent parent=FXMLLoader.load(getClass().getResource("MemberAdd.fxml"));
-				
+				Parent parent = FXMLLoader.load(getClass().getResource("MemberAdd.fxml"));
+
 				Scene s = new Scene(parent);
 				stage.setScene(s);
 				stage.show();
-				
+
 				// 추가화면의 컨트롤 사용하기
 				Button btnUserAdd = (Button) parent.lookup("#btnUserAdd");
 				btnUserAdd.setOnAction(new EventHandler<ActionEvent>() {
@@ -87,10 +98,11 @@ public class MemberController implements Initializable{
 						TextField UserPhone = (TextField) parent.lookup("#UserPhone");
 						TextField UserEmail = (TextField) parent.lookup("#UserEmail");
 
-						Member member = new Member(UserName.getText(),Integer.parseInt(UserAge.getText()),UserPhone.getText(),UserEmail.getText());
+						Member member = new Member(UserName.getText(), Integer.parseInt(UserAge.getText()),
+								UserPhone.getText(), UserEmail.getText());
 
 						list.add(member);
-
+						insertUserList(member);
 						stage.close();
 
 					}
@@ -108,19 +120,13 @@ public class MemberController implements Initializable{
 					UserAge.clear();
 					UserPhone.clear();
 					UserEmail.clear();
-					
-
 				});
-				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		});
-	
-		tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+		tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				// System.out.println(event);
@@ -133,6 +139,75 @@ public class MemberController implements Initializable{
 
 		});
 	}
+
+	public void insertUserList(Member mem) {
+
+		Connection conn = ConnectionDB.getDB();
+
+		String sql = "insert into USER_DB(user_name,user_age,user_phone,user_email)" + "values(" + "\'"
+				+ mem.getName() + "\'," + "\'" + mem.getAge() + "\',\'" + mem.getPhone() + "\',\'"
+				+ mem.getEmail() + "\'" + ")";
+
+		list = FXCollections.observableArrayList();
+
+		System.out.println(sql);
+
+		try {
+			PreparedStatement psmt = conn.prepareStatement(sql);
+			int r = psmt.executeUpdate();
+			System.out.println(r + "건 입력되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ObservableList<Member> getUserList() {
+		Connection conn = ConnectionDB.getDB();
+		String sql = "select * from USER_DB";
+		list = FXCollections.observableArrayList();
+
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Member mem = new Member(rs.getString("user_name"), rs.getInt("user_age"), rs.getString("user_phone"),
+						rs.getString("user_email"));
+				list.add(mem);
+			}
+			System.out.println("조회되었습니다.");
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public void removeEmp(String deid) {
+		
+		Connection conn = ConnectionDB.getDB();
+
+		String sql = "delete from USER_DB where USER_name='"+deid+"'";
+		
+		System.out.println(sql);
+		
+		try {
+			PreparedStatement psmt = conn.prepareStatement(sql);
+			int r = psmt.executeUpdate();
+			System.out.println(r + "건 삭제되었습니다.");
+		}catch(SQLException e){
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	public void handleDoubleClickAction(String name) {
 
 		Stage stage = new Stage(StageStyle.UTILITY);
@@ -142,7 +217,7 @@ public class MemberController implements Initializable{
 		AnchorPane ap = new AnchorPane();
 		ap.setPrefSize(210, 230);
 
-		Label  lAge, lPhone , lEmail;
+		Label lAge, lPhone, lEmail;
 		TextField tName, tAge, tPhone, tEmail;
 
 		lAge = new Label("나이");
@@ -189,7 +264,8 @@ public class MemberController implements Initializable{
 			public void handle(ActionEvent event) {
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).getName().contentEquals(name)) {
-						Member member = new Member(name, Integer.parseInt(tAge.getText()),tPhone.getText(), tEmail.getText());
+						Member member = new Member(name, Integer.parseInt(tAge.getText()), tPhone.getText(),
+								tEmail.getText());
 						list.set(i, member);
 					}
 				}
@@ -211,11 +287,10 @@ public class MemberController implements Initializable{
 		Scene scene = new Scene(ap);
 		stage.setScene(scene);
 		stage.show();
-		
 	}
-	
+
 	public void handleBtnUserDeleteAction() {
-		
+
 		Stage stage = new Stage(StageStyle.UTILITY);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.initOwner(primaryStage);
@@ -232,17 +307,18 @@ public class MemberController implements Initializable{
 				@Override
 				public void handle(ActionEvent arg0) {
 					TextField txtDeleteUser = (TextField) parent.lookup("#txtDeleteUser");
-					
-					for(int i=0;i<list.size();i++) {
-						if(list.get(i).getName().equals(txtDeleteUser.getText())) {
+
+					for (int i = 0; i < list.size(); i++) {
+						if (list.get(i).getName().equals(txtDeleteUser.getText())) {
 							list.remove(i);
 						}
 					}
+					removeEmp(txtDeleteUser.getText());
 					stage.close();
 				}
 			});
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 	}

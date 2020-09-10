@@ -25,6 +25,7 @@
 			<children>
 				<Button fx:id="btnInsert" text="Insert" />
            		<Button fx:id="btnDelete" text="Delete" />
+           		<Button fx:id="btnSelect" text="Select" />
 			
 			</children>
 		</HBox>

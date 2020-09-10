@@ -2,9 +2,14 @@ package com.yedam.book;
 
 import java.io.IOException;
 import java.net.URL;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+
+import basic.common.ConnectionDB;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,10 +37,9 @@ public class BookController implements Initializable {
 //	@FXML
 //	TableView<Member> tableView2;
 	@FXML
-	Button btnAdd, btnBring , btnMember,btnUserAdd,btnUserCancel,btnInsert,btnDelete;
+	Button btnAdd, btnBring , btnMember,btnUserAdd,btnUserCancel,btnInsert,btnDelete,btnSearch;
 
 	ObservableList<Book> list;
-	ObservableList<Member> list2;
 
 	Stage primaryStage;
 
@@ -46,7 +50,7 @@ public class BookController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		//////////
+		
 		
 		TableColumn<Book, ?> tc = tableView.getColumns().get(0); // 첫번째칼럼
 		tc.setCellValueFactory(new PropertyValueFactory<>("bookname"));
@@ -60,26 +64,28 @@ public class BookController implements Initializable {
 		tc = tableView.getColumns().get(3);
 		tc.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-		//tableView2.setItems(list2);
+		
+		list = FXCollections.observableArrayList();
+		tableView.setItems(list);
 		
 		
+		
+		btnSearch.setOnAction(new EventHandler<ActionEvent>() {
 
-	
-		// 추가버튼
-		btnAdd.setOnAction(new EventHandler<ActionEvent>() {
-		
 			@Override
 			public void handle(ActionEvent arg0) {
-				handleBtnAddAction();
-				
+				list = getBookList();
+				tableView.setItems(list);
 			}
-
+			
 		});
+		
 		btnBring.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				handleBtnBringAction();
+				
 				
 			}
 			
@@ -102,18 +108,60 @@ public class BookController implements Initializable {
 		btnMember.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
-			public void handle(ActionEvent arg0) {
-				handleBtnAddAction2();	
+			public void handle(ActionEvent arg0) {				
+				handleBtnAddAction2();
 			}
 		});
-		
-		// 성적저장
-		list = FXCollections.observableArrayList();
-		list2 = FXCollections.observableArrayList();
-		tableView.setItems(list);
 
-	}// end of initialize()
-	
+
+		btnAdd.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				handleBtnAddAction();
+			}	
+		});
+	}
+	public void insertStudentList(Book book) {
+		
+		Connection conn = ConnectionDB.getDB();
+
+		String sql = "insert into BOOK_DB(book_name,book_author,book_publisher,book_price)"
+		+ "values("+"\'"+book.getBookname()+"\',"+"\'"+book.getBookuser()+"\',\'"+book.getCompany()+"\',\'"+book.getPrice()+"\'"+")";
+		
+		list = FXCollections.observableArrayList();
+		
+		System.out.println(sql);
+		
+		try {
+			PreparedStatement psmt = conn.prepareStatement(sql);
+			int r = psmt.executeUpdate();
+			System.out.println(r + "건 입력되었습니다.");
+		}catch(SQLException e){
+			e.printStackTrace();
+		}	
+	}
+
+	public ObservableList<Book> getBookList(){
+		Connection conn = ConnectionDB.getDB();
+		String sql = "select * from BOOK_DB";
+		list = FXCollections.observableArrayList();
+		
+		try {
+			PreparedStatement pstmt=conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Book book= new Book(rs.getString("book_name"),rs.getString("book_author"),rs.getString("book_publisher"),rs.getInt("book_price"));
+				list.add(book);
+			}
+			System.out.println("조회되었습니다.");
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public void handleBtnAddAction2() {
 		Stage stage = new Stage(StageStyle.UTILITY);
 		stage.initModality(Modality.WINDOW_MODAL);
@@ -127,7 +175,6 @@ public class BookController implements Initializable {
 
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -226,8 +273,6 @@ public class BookController implements Initializable {
 		stage.initOwner(btnAdd.getScene().getWindow());// 나중에 추가
 
 		try {
-			// BorderPane BP = FXMLLoader.load(getClass().getResource("AddForm.fxml")); 같다
-			// 밑에와
 			Parent parent = FXMLLoader.load(getClass().getResource("BookAdd.fxml"));
 
 			Scene scene = new Scene(parent);
@@ -245,12 +290,10 @@ public class BookController implements Initializable {
 					TextField txtCompany = (TextField) parent.lookup("#txtCompany");
 					TextField txtPrice = (TextField) parent.lookup("#txtPrice");
 
-					Book book = new Book(txtName.getText(), txtUser.getText(),txtCompany.getText(),Integer.parseInt(txtPrice.getText()));
-
-					list.add(book);
-
+					Book book = new Book(txtName.getText(),txtUser.getText(),txtCompany.getText(),Integer.parseInt(txtPrice.getText()));
+					list.add(book);	
+					insertStudentList(book);
 					stage.close();
-
 				}
 
 			});
@@ -272,11 +315,28 @@ public class BookController implements Initializable {
 
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
+	
+	public void removeEmp(String deid) {
+		
+		Connection conn = ConnectionDB.getDB();
+
+		String sql = "delete from BOOK_DB where book_name='"+deid+"'";
+		
+		System.out.println(sql);
+		
+		try {
+			PreparedStatement psmt = conn.prepareStatement(sql);
+			int r = psmt.executeUpdate();
+			System.out.println(r + "건 삭제되었습니다.");
+		}catch(SQLException e){
+			e.printStackTrace();
+		}	
+	}
+	
 	
 	public void handleBtnBringAction() {
 
@@ -297,14 +357,17 @@ public class BookController implements Initializable {
 				public void handle(ActionEvent arg0) {
 					TextField txtDeleteName = (TextField) parent.lookup("#txtDeleteName");
 					
+					///////
+					
+					
+					
 					for(int i=0;i<list.size();i++) {
 						if(list.get(i).getBookname().equals(txtDeleteName.getText())) {
 							list.remove(i);
 						}
-						
-						
-						
 					}
+					
+					removeEmp(txtDeleteName.getText());
 					stage.close();
 
 				}
@@ -312,17 +375,8 @@ public class BookController implements Initializable {
 			});
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
