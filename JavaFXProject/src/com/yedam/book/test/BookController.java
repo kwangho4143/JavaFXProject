@@ -1,4 +1,4 @@
-package com.yedam.book;
+package com.yedam.book.test;
 
 import java.io.IOException;
 import java.net.URL;

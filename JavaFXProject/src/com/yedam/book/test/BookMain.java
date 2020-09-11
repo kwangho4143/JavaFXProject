@@ -1,6 +1,5 @@
 package com.yedam.book.test;
 
-import com.yedam.book.BookController;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -11,15 +10,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-
-public class LogMain extends Application{
+public class BookMain extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("base.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("BookList.fxml"));
 		BorderPane root = loader.load(); //기존과 다른점
 		
-		LogController controller = loader.getController();
+		BookController controller = loader.getController();
 		controller.setPrimaryStage(primaryStage);
 		
 		
@@ -27,6 +25,8 @@ public class LogMain extends Application{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setResizable(false);
+	
+		
 	}
 	public static void main(String[] args) {
 		launch(args);

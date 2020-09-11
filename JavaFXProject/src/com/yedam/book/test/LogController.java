@@ -39,34 +39,20 @@ public class LogController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		TableColumn<Login, ?> tc = tableView.getColumns().get(0); // 첫번째칼럼
-		tc.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-		tc = tableView.getColumns().get(1);
-		tc.setCellValueFactory(new PropertyValueFactory<>("password"));
-
-		list = FXCollections.observableArrayList();
-		tableView.setItems(list);
-		
+		list = FXCollections.observableArrayList();		
 		btnLogin.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
 			}
-			
 		});
-	
 		
 		
 	}//이니셜라이즈
-	
-	
 	public ObservableList<Login> getLogInf(String id){
 		Connection conn = ConnectionDB.getDB();
 		String sql = "select log_id from LOG_DB where log_id ='"+id+"'";
-		list = FXCollections.observableArrayList();
-		
+		list = FXCollections.observableArrayList();	
 		try {
 			PreparedStatement pstmt=conn.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
@@ -75,14 +61,9 @@ public class LogController implements Initializable {
 				list.add(lg);
 			}
 			System.out.println("조회되었습니다.");
-		} catch (SQLException e) {
-			
+		} catch (SQLException e) {	
 			e.printStackTrace();
 		}
 		return list;
 	}
-
-	
-	
-	
 }
