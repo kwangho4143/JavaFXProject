@@ -66,7 +66,7 @@ public class MemberController implements Initializable {
 				handleBtnUserDeleteAction();
 			}
 		});
-
+		
 		btnSelect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -79,7 +79,6 @@ public class MemberController implements Initializable {
 			Stage stage = new Stage(StageStyle.UTILITY);
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.initOwner(primaryStage);
-
 			try {
 				Parent parent = FXMLLoader.load(getClass().getResource("MemberAdd.fxml"));
 
@@ -104,9 +103,7 @@ public class MemberController implements Initializable {
 						list.add(member);
 						insertUserList(member);
 						stage.close();
-
 					}
-
 				});
 
 				Button btnUserCancel = (Button) parent.lookup("#btnUserCancel");
@@ -133,10 +130,8 @@ public class MemberController implements Initializable {
 				if (event.getClickCount() == 2) {// 2라는 것은 더블클릭
 					String selectedName = tableView.getSelectionModel().getSelectedItem().getName();
 					handleDoubleClickAction(selectedName);
-
 				}
 			}
-
 		});
 	}
 
